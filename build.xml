@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ImageConverter" default="default" basedir=".">
+    <description>Builds, tests, and runs the project ImageConverter.</description>
+    <import file="nbproject/build-impl.xml"/>
+    
+    <loadproperties srcfile="src/version.properties" />
+    <target name="-post-jar">
+        <echo message="Building zip file: ${Version.ApplicationName}-${Version.Number}.zip" />
+        <zip destfile="${dist.dir}/${Version.ApplicationName}-${Version.Number}.zip" basedir="${dist.dir}" includes="**/*.jar">
+            <fileset dir="${src.dir}" includes="version.properties"></fileset>
+        </zip>
+    </target>
+</project>
