@@ -1,7 +1,7 @@
 # ImageConverter
 Creates c source files from images.
 
-Supports output as RGB-565 (16 Bits per pixel) and monochrome (1 Bit per pixel, height will be padded to a multiple of 8).
+Supports output as RGB-565 (16 Bits per pixel) and monochrome (1 Bit per pixel - since pixels will be grouped vertically, the height will be padded to a multiple of 8).
 
 This tool targets ArduBoy and Circuitmess Nibble development but should be useful for other environments, too.
 
@@ -28,6 +28,8 @@ Set this option to invert the color reduced image. Can be useful for some monoch
 - `-d`, `--includedimensions`  
 When this option is set, the generated array data will contain the image dimensions at first. This format is required by some graphics libraries.
 
+Other arguments will be interpreted as file names for the input images.
+  
 # Third party components
 This software uses some icons from the [FatCow icon collection](https://www.fatcow.com/free-icons)
 and the Java Look and Feel [FlatLaf](https://www.formdev.com/flatlaf/).
