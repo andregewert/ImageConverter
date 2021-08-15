@@ -58,61 +58,95 @@ public class ImageConverter {
             String arg;
             String value;
             String outfile = null;
+            String outdir = null;
             ArrayList<String> filenames = new ArrayList<>();
-            
-            while (i < args.length) {
-                arg = args[i];
-                
-                switch (arg) {
-                    
-                    case "-c", "--backgroundcolor" -> {
-                        value = getArg(args, ++i);
-                        if (value != null) options.backgroundColor = Color.decode(value);
-                    }
-                    
-                    case "-m", "--mode" -> {
-                        value = getArg(args, ++i);
-                        switch (value) {
-                            case "rgb565":
-                                options.mode = Converter.Mode.RGB565;
-                                break;
-                            case "mono":
-                                options.mode = Converter.Mode.MONO;
-                                break;
-                            default:
-                                throw new IllegalArgumentException("Unknown mode " + value);
+
+            try {
+                while (i < args.length) {
+                    arg = args[i];
+
+                    switch (arg) {
+
+                        case "-c", "--backgroundcolor" -> {
+                            value = getArg(args, ++i);
+                            if (value != null) options.backgroundColor = Color.decode(value);
+                        }
+
+                        case "-m", "--mode" -> {
+                            value = getArg(args, ++i);
+                            switch (value) {
+                                case "rgb565":
+                                    options.mode = Converter.Mode.RGB565;
+                                    break;
+                                case "mono":
+                                case "monov":
+                                    options.mode = Converter.Mode.MONOV;
+                                    break;
+                                case "monoh":
+                                    options.mode = Converter.Mode.MONOH;
+                                    break;
+                                default:
+                                    throw new IllegalArgumentException("Unknown mode " + value);
+                            }
+                        }
+
+                        case "-v", "--varname" -> {
+                            options.variableName = getArg(args, ++i);
+                        }
+
+                        case "-t", "--vartype" -> {
+                            options.variableType = getArg(args, ++i);
+                        }
+
+                        case "-o", "--outputfile" -> {
+                            if (outdir != null) {
+                                throw new IllegalArgumentException("Options --directory and --outputfile cannot be combined!");
+                            }
+                            outfile = getArg(args, ++i);
+                        }
+
+                        case "-i", "--invertcolors" -> {
+                            options.invertColors = true;
+                        }
+
+                        case "-d", "--includedimensions" -> {
+                            options.includeDimensions = true;
+                        }
+
+                        case "-a", "--ascii" -> {
+                            options.createAsciiArt = true;
+                        }
+
+                        case "-p", "--preset" -> {
+                            value = getArg(args, ++i);
+                            options.applyPreset(ConverterOptions.Preset.valueOf(value));
+                        }
+                        
+                        case "-e", "--directory" -> {
+                            if (outfile != null) {
+                                throw new IllegalArgumentException("Options --directory and --outputfile cannot be combined!");
+                            }
+                            outdir = getArg(args, ++i);
+                        }
+
+                        case "-h", "--help" -> {
+                            // TODO show help text
+                        }
+
+                        default -> {
+                            filenames.add(arg);
                         }
                     }
-                    
-                    case "-v", "--varname" -> {
-                        options.variableName = getArg(args, ++i);
-                    }
-                    
-                    case "-t", "--vartype" -> {
-                        options.variableType = getArg(args, ++i);
-                    }
-                    
-                    case "-o", "--outputfile" -> {
-                        outfile = getArg(args, ++i);
-                    }
-                    
-                    case "-i", "--invertcolors" -> {
-                        options.invertColors = true;
-                    }
-                    
-                    case "-d", "--includedimensions" -> {
-                        options.includeDimensions = true;
-                    }
-                    
-                    default -> {
-                        filenames.add(arg);
-                    }
+                    i++;
                 }
-                i++;
-            }
 
-            if (filenames.isEmpty()) {
-                throw new IllegalArgumentException("No input files given!");
+                if (filenames.isEmpty()) {
+                    throw new IllegalArgumentException("No input files given!");
+                }
+            
+            } catch (IllegalArgumentException ex) {
+                showHelp();
+                return;
             }
 
             // Remove file before appending data to it
@@ -123,6 +157,8 @@ public class ImageConverter {
             boolean appendToFile = outfile != null && filenames.size() > 1;
             for (var filename : filenames) {
                 converter.loadImage(filename);
+                
+                // TODO use outdir if specified!
                 options.outputFilename = (outfile == null)? converter.getDefaultOutputFileName() : outfile;
                 if (options.variableName.isBlank()) {
                     options.variableName = converter.getDefaultVariableName();
@@ -135,6 +171,10 @@ public class ImageConverter {
     private static String getArg(String[] args, int index) {
         if (index < args.length) return args[index];
         throw new IllegalArgumentException("Required argument is missing");
+    }
+    
+    private static void showHelp() {
+        // TODO implement
     }
 
 }

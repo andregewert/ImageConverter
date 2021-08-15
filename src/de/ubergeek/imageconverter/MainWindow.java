@@ -26,6 +26,7 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -142,10 +143,12 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void copyOptionsToUserInterface() {
         backgroundColorPreviewPanel.setBackground(options.backgroundColor);
-        if (options.mode == Converter.Mode.MONO) {
+        if (options.mode == Converter.Mode.MONOV) {
             targetFormatComboBox.setSelectedIndex(0);
-        } else {
+        } else if (options.mode == Converter.Mode.MONOH) {
             targetFormatComboBox.setSelectedIndex(1);
+        } else {
+            targetFormatComboBox.setSelectedIndex(2);
         }
         variableNameTextField.setText(options.variableName);
         variableTypeTextField.setText(options.variableType);
@@ -159,7 +162,13 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void copyOptionsFromUserInterface() {
         options.backgroundColor = backgroundColorPreviewPanel.getBackground();
-        options.mode = (targetFormatComboBox.getSelectedIndex() == 0)? Converter.Mode.MONO : Converter.Mode.RGB565;
+        if (targetFormatComboBox.getSelectedIndex() == 0) {
+            options.mode = Converter.Mode.MONOV;
+        } else if (targetFormatComboBox.getSelectedIndex() == 1) {
+            options.mode = Converter.Mode.MONOH;
+        } else if (targetFormatComboBox.getSelectedIndex() == 2) {
+            options.mode = Converter.Mode.RGB565;
+        }
         options.variableName = variableNameTextField.getText();
         options.variableType = variableTypeTextField.getText();
         options.outputFilename = outputFilenameTextField.getText();
@@ -182,6 +191,8 @@ public class MainWindow extends javax.swing.JFrame {
                     success = true;
                 } catch (IOException ex) {
                     Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    System.out.println(ex.getMessage());
+                    System.out.println(Arrays.toString(ex.getStackTrace()));
                     success = false;
                 }
                 return null;
@@ -408,7 +419,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        targetFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monochrome", "RGB-565" }));
+        targetFormatComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Monochrome V", "Monochrome H", "RGB-565" }));
 
         variableNameLabel.setLabelFor(variableNameTextField);
         variableNameLabel.setText("Variable name");

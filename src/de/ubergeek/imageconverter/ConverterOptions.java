@@ -25,6 +25,10 @@ import java.awt.Color;
  * @author André Gewert <agewert@ubergeek.de>
  */
 public class ConverterOptions {
+    
+    public enum Preset {
+        arduboy, cos, cosmono
+    };
 
     // <editor-fold desc="Properties">
 
@@ -71,7 +75,44 @@ public class ConverterOptions {
      * -d / --includedimensions
      */
     public boolean includeDimensions = false;
+    
+    /**
+     * Indicates that an ascii representation should be generated.
+     * -a / --ascii
+     */
+    public boolean createAsciiArt = false;
 
+    // </editor-fold>
+    
+    
+    // <editor-fold desc="Public methods">
+    
+    public void applyPreset(Preset preset) {
+        switch (preset) {
+            
+            case arduboy -> {
+                backgroundColor = Color.BLACK;
+                mode = Mode.MONOV;
+                variableType = "const uint8_t PROGMEM";
+                includeDimensions = false;
+            }
+            
+            case cos -> {
+                backgroundColor = Color.BLACK;
+                mode = Mode.RGB565;
+                variableType = "const unsigned short PROGMEM";
+                includeDimensions = false;
+            }
+            
+            case cosmono -> {
+                backgroundColor = Color.BLACK;
+                mode = Mode.MONOV;
+                variableType = "const byte PROGMEM";
+                includeDimensions = false;
+            }
+        }
+    }
+    
     // </editor-fold>
     
 }

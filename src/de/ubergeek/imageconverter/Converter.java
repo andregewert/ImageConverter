@@ -37,8 +37,15 @@ public class Converter {
      * Conversion mode.
      */
     public enum Mode {
-        RGB565, MONO
+        RGB565, MONOV, MONOH
     };
+    
+    /**
+     * Mapping of intensity values to ascii characters.
+     * Taken from Paul Bourke
+     * http://paulbourke.net/dataformats/asciiart/
+     */
+    public final static String ASCII_MAP = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
     
     // <editor-fold desc="Properties">
 
@@ -141,9 +148,11 @@ public class Converter {
      */
     public Image createReducedImage(ConverterOptions converterOptions) {        
         var targetImage = new BufferedImage(
-                sourceImage.getWidth(),
-                sourceImage.getHeight(),
-                (converterOptions.mode == Mode.MONO) ? BufferedImage.TYPE_BYTE_BINARY : BufferedImage.TYPE_USHORT_565_RGB
+            //sourceImage.getWidth(),
+            //sourceImage.getHeight(),
+            calculateTargetWidth(converterOptions),
+            calculateTargetHeight(converterOptions),
+            (converterOptions.mode != Mode.RGB565) ? BufferedImage.TYPE_BYTE_BINARY : BufferedImage.TYPE_USHORT_565_RGB
         );
         
         var graphics = targetImage.createGraphics();
@@ -172,18 +181,33 @@ public class Converter {
         }
 
         var sb = new StringBuilder();
+        
+        // Optional: create ascii representation
+        if (options.createAsciiArt) {
+            createAsciiArt(options, sb);
+        }
+
+        // Variable declaration
         sb.append(options.variableType).append(" ").append(options.variableName).append("[] = {").append(System.lineSeparator());
         
-        // Dimensions of the created image data
+        // Optional: include dimensions of the created image data
         if (options.includeDimensions) {
+            /*
             int targetWidth = sourceImage.getWidth();
             int targetHeight = sourceImage.getHeight();
-            if (options.mode == Mode.MONO) {
+            if (options.mode == Mode.MONOV) {
                 targetHeight = (int)(Math.ceil(targetHeight /8f) *8);
-            }            
+            }
+            */
+            int targetWidth = calculateTargetWidth(options);
+            int targetHeight = calculateTargetHeight(options);
             sb.append(targetWidth).append(", ").append(targetHeight).append(", ").append(System.lineSeparator());
         }
+        
+        // Image data
         createSourceCodeFromImage(options, sb);
+        
+        // End of variable declaration
         sb.append("};").append(System.lineSeparator()).append(System.lineSeparator());
 
         if (append) {
@@ -203,6 +227,26 @@ public class Converter {
     public void saveOutputfile(ConverterOptions options) throws IOException {
         saveOutputfile(options, false);
     }
+
+    // </editor-fold>
+    
+    
+    // <editor-fold desc="Internal methods">
+    
+    private int calculateTargetWidth(ConverterOptions options) {
+        if (options.mode == Mode.MONOH) return (int)(Math.ceil(sourceImage.getWidth() /8f) *8);
+        return sourceImage.getWidth();
+    }
+    
+    private int calculateTargetHeight(ConverterOptions options) {
+        if (options.mode == Mode.MONOV) return (int)(Math.ceil(sourceImage.getHeight() /8f) *8);
+        return sourceImage.getHeight();
+    }
+    
+    private char getAsciiCharByIntensity(float i) {
+        int index = (int)Math.floor(69 *i);
+        return ASCII_MAP.charAt(index);
+    }
     
     /**
      * Creates the source code according to the given ConvertOptions and appends
@@ -211,10 +255,49 @@ public class Converter {
      * @param sb String Builder
      */
     private int createSourceCodeFromImage(ConverterOptions options, StringBuilder sb) {
-        if (options.mode == Mode.MONO) {
-            return createMonoSourceCode(options, sb);
+        switch (options.mode) {
+            case MONOV -> {
+                return createMonoVSourceCode(options, sb);
+            }
+            
+            case MONOH -> {
+                return createMonoHSourceCode(options, sb);
+            }
+            
+            case RGB565 -> {
+                return createRgb565SourceCode(options, sb);
+            }
         }
-        return createRgb565SourceCode(options, sb);
+        return 0;
+    }
+    
+    /**
+     * Creates an ascii representation of the source image.
+     * @param options Converter options
+     * @param sb String Builder
+     */
+    private void createAsciiArt(ConverterOptions options, StringBuilder sb) {
+        var img = (BufferedImage)createReducedImage(options);
+        int height = img.getHeight();
+        int width = img.getWidth();
+        float intensity;
+        
+        for (int y = 0; y < height; y++) {
+            sb.append("// ");
+            for (int x = 0; x < width; x++) {
+                int[] array = new int[img.getColorModel().getNumComponents()];
+                img.getRaster().getPixel(x, y, array);
+                if (img.getType() == BufferedImage.TYPE_BYTE_BINARY) {
+                    intensity = array[0];
+                } else {
+                    intensity = (((array[0] +1) /32f)
+                                + ((array[1] +1) /64f)
+                                + ((array[2] +1) /32f)) /3f;
+                }
+                sb.append(getAsciiCharByIntensity(intensity));
+            }
+            sb.append(System.lineSeparator());
+        }
     }
     
     /**
@@ -250,14 +333,53 @@ public class Converter {
     }
     
     /**
-     * Creates the source code for monochrome images.
+     * Creates the source code for monochrome images (horizontally grouped).
+     * Bytes will be calculated horizontally; image width will be padded to a
+     * multiple of 8.
+     * @param options Converter options
+     * @param sb StringBuilder
+     * @return Number of bytes defined
+     */
+    private int createMonoHSourceCode(ConverterOptions options, StringBuilder sb) {
+        var img = (BufferedImage)createReducedImage(options);
+        int resultByte;
+        int numberOfElements = 0;
+        int width = img.getWidth();
+        int height = img.getHeight();
+        
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x += 8) {
+                resultByte = 0;
+                for (int counter = 0; counter < 8; counter++) {
+                    if (x +counter < width) {
+                        int[] array = new int[img.getColorModel().getNumComponents()];
+                        img.getRaster().getPixel(x +counter, y, array);
+                        resultByte |= (array[0] << counter);
+                    }
+                    
+                    sb.append("0x").append(
+                        padLeft(Integer.toHexString(resultByte), 2, '0')
+                    );
+                    if (x != width -1 || y != height -1) {
+                        sb.append(", ");
+                    }
+                    numberOfElements++;
+                }
+                sb.append(System.lineSeparator());
+            }
+        }
+        return numberOfElements;
+    }
+    
+    /**
+     * Creates the source code for monochrome images (vertically grouped).
      * Bytes will be calculated vertically; image height will be padded to a
      * multiple of 8.
      * @param options Converter options
      * @param sb StringBuilder
      * @return Number of bytes defined
      */
-    private int createMonoSourceCode(ConverterOptions options, StringBuilder sb) {
+    private int createMonoVSourceCode(ConverterOptions options, StringBuilder sb) {
         var img = (BufferedImage)createReducedImage(options);
         int resultByte;
         int numberOfElements = 0;
@@ -288,11 +410,6 @@ public class Converter {
         return numberOfElements;
     }
     
-    // </editor-fold>
-    
-    
-    // <editor-fold desc="Internal methods">
-    
     /**
      * Inverts the colors of the given BufferedImage.
      * @param image The image to be inverted
@@ -310,8 +427,15 @@ public class Converter {
         }
     }
     
-    private static String padLeft(String inputValue, Integer length, char car) {
-        return (inputValue + String.format("%" + length + "s", "").replace(" ", String.valueOf(car))).substring(0, length);
+    /**
+     * Pads a string on the left side to the given length with a specific character.
+     * @param inputValue Input string
+     * @param length Target length
+     * @param fillChar Character for filling up the string
+     * @return The padded string
+     */
+    private static String padLeft(String inputValue, Integer length, char fillChar) {
+        return (inputValue + String.format("%" + length + "s", "").replace(" ", String.valueOf(fillChar))).substring(0, length);
     }
     
     // </editor-fold>
