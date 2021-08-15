@@ -174,7 +174,16 @@
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
+                              <Component id="jSeparator1" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="28" max="32767" attributes="0"/>
+                                  <Component id="updatePreviewButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="openImageButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="saveButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="selectBackgroundColorLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="targetFormatLabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -184,34 +193,34 @@
                                       <Component id="outputFilename" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="includeDimensionsLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="variableTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="presetLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="createAsciiArtLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="separate" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="variableNameTextField" alignment="0" max="32767" attributes="0"/>
                                       <Component id="targetFormatComboBox" alignment="0" max="32767" attributes="0"/>
                                       <Component id="outputFilenameTextField" max="32767" attributes="0"/>
-                                      <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="invertColorsCheckBox" min="-2" max="-2" attributes="0"/>
-                                              <Component id="includeDimensionsCheckBox" min="-2" max="-2" attributes="0"/>
-                                          </Group>
-                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="backgroundColorPreviewPanel" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="selectBackgroundColorButton" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="variableTypeTextField" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="presetComboBox" pref="0" max="32767" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="applyPresetButton" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" attributes="0">
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="createAsciiArtCheckBox" min="-2" max="-2" attributes="0"/>
+                                              <Component id="invertColorsCheckBox" min="-2" max="-2" attributes="0"/>
+                                              <Component id="includeDimensionsCheckBox" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                  <Component id="updatePreviewButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="openImageButton" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="saveButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -225,43 +234,58 @@
                           <Component id="settingsHeadlineLabel" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="selectBackgroundColorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="selectBackgroundColorButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="presetLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="presetComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="applyPresetButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                          <Component id="selectBackgroundColorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="selectBackgroundColorButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="backgroundColorPreviewPanel" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="targetFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="targetFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="variableNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="variableNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="variableTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="variableTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="outputFilename" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="outputFilenameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="invertColorsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="invertColorsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="includeDimensionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="includeDimensionsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="createAsciiArtLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="backgroundColorPreviewPanel" min="-2" max="-2" attributes="0"/>
+                              <Component id="createAsciiArtCheckBox" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="targetFormatLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="targetFormatComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="variableNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="variableNameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="variableTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="variableTypeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="outputFilename" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="outputFilenameTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="invertColorsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="invertColorsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="includeDimensionsLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="includeDimensionsCheckBox" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace pref="95" max="32767" attributes="0"/>
+                          <EmptySpace pref="27" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="saveButton" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="openImageButton" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -282,6 +306,38 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Settings"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="presetLabel">
+                  <Properties>
+                    <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                      <ComponentRef name="presetComboBox"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Preset"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="presetComboBox">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="3">
+                        <StringItem index="0" value="Arduboy"/>
+                        <StringItem index="1" value="Circuitmess Mono"/>
+                        <StringItem index="2" value="Circuitmess Color"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JButton" name="applyPresetButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Apply"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="applyPresetButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JSeparator" name="jSeparator1">
                 </Component>
                 <Component class="javax.swing.JLabel" name="selectBackgroundColorLabel">
                   <Properties>
@@ -351,22 +407,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="outputFilenameTextField">
                 </Component>
-                <Component class="javax.swing.JButton" name="saveButton">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Save"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
-                  </Events>
-                </Component>
-                <Component class="javax.swing.JButton" name="openImageButton">
-                  <Properties>
-                    <Property name="text" type="java.lang.String" value="Open Image"/>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openImageButtonActionPerformed"/>
-                  </Events>
-                </Component>
                 <Component class="javax.swing.JLabel" name="includeDimensionsLabel">
                   <Properties>
                     <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
@@ -413,6 +453,32 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="variableTypeTextField">
+                </Component>
+                <Component class="javax.swing.JLabel" name="createAsciiArtLabel">
+                  <Properties>
+                    <Property name="labelFor" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
+                      <ComponentRef name="createAsciiArtCheckBox"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Create ASCII Art"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="createAsciiArtCheckBox">
+                </Component>
+                <Component class="javax.swing.JButton" name="openImageButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Open Image"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="openImageButtonActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="saveButton">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Save"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="saveButtonActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="updatePreviewButton">
                   <Properties>

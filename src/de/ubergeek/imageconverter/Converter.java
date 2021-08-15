@@ -148,8 +148,6 @@ public class Converter {
      */
     public Image createReducedImage(ConverterOptions converterOptions) {        
         var targetImage = new BufferedImage(
-            //sourceImage.getWidth(),
-            //sourceImage.getHeight(),
             calculateTargetWidth(converterOptions),
             calculateTargetHeight(converterOptions),
             (converterOptions.mode != Mode.RGB565) ? BufferedImage.TYPE_BYTE_BINARY : BufferedImage.TYPE_USHORT_565_RGB
@@ -192,13 +190,6 @@ public class Converter {
         
         // Optional: include dimensions of the created image data
         if (options.includeDimensions) {
-            /*
-            int targetWidth = sourceImage.getWidth();
-            int targetHeight = sourceImage.getHeight();
-            if (options.mode == Mode.MONOV) {
-                targetHeight = (int)(Math.ceil(targetHeight /8f) *8);
-            }
-            */
             int targetWidth = calculateTargetWidth(options);
             int targetHeight = calculateTargetHeight(options);
             sb.append(targetWidth).append(", ").append(targetHeight).append(", ").append(System.lineSeparator());
@@ -342,7 +333,7 @@ public class Converter {
      */
     private int createMonoHSourceCode(ConverterOptions options, StringBuilder sb) {
         var img = (BufferedImage)createReducedImage(options);
-        int resultByte;
+        byte resultByte;
         int numberOfElements = 0;
         int width = img.getWidth();
         int height = img.getHeight();
@@ -354,19 +345,19 @@ public class Converter {
                     if (x +counter < width) {
                         int[] array = new int[img.getColorModel().getNumComponents()];
                         img.getRaster().getPixel(x +counter, y, array);
-                        resultByte |= (array[0] << counter);
+                        resultByte |= (array[0] << 7 -counter);
                     }
-                    
-                    sb.append("0x").append(
-                        padLeft(Integer.toHexString(resultByte), 2, '0')
-                    );
-                    if (x != width -1 || y != height -1) {
-                        sb.append(", ");
-                    }
-                    numberOfElements++;
                 }
-                sb.append(System.lineSeparator());
+                
+                sb.append("B").append(
+                    String.format("%8s", Integer.toBinaryString(resultByte & 0xFF)).replace(' ', '0')
+                );
+                if (x < width -8 || y < height -1) {
+                    sb.append(", ");
+                }
+                numberOfElements++;
             }
+            sb.append(System.lineSeparator());
         }
         return numberOfElements;
     }
@@ -381,7 +372,7 @@ public class Converter {
      */
     private int createMonoVSourceCode(ConverterOptions options, StringBuilder sb) {
         var img = (BufferedImage)createReducedImage(options);
-        int resultByte;
+        byte resultByte;
         int numberOfElements = 0;
         int width = img.getWidth();
         int height = img.getHeight();
@@ -400,7 +391,7 @@ public class Converter {
                 sb.append("0x").append(
                     padLeft(Integer.toHexString(resultByte), 2, '0')
                 );
-                if (x != width -1 || y != height -1) {
+                if (x < width -1 || y < height -8) {
                     sb.append(", ");
                 }
                 numberOfElements++;

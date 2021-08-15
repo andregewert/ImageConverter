@@ -155,6 +155,7 @@ public class MainWindow extends javax.swing.JFrame {
         outputFilenameTextField.setText(options.outputFilename);
         invertColorsCheckBox.setSelected(options.invertColors);
         includeDimensionsCheckBox.setSelected(options.includeDimensions);
+        createAsciiArtCheckBox.setSelected(options.createAsciiArt);
     }
     
     /**
@@ -174,6 +175,7 @@ public class MainWindow extends javax.swing.JFrame {
         options.outputFilename = outputFilenameTextField.getText();
         options.invertColors = invertColorsCheckBox.isSelected();
         options.includeDimensions = includeDimensionsCheckBox.isSelected();
+        options.createAsciiArt = createAsciiArtCheckBox.isSelected();
     }
     
     /**
@@ -292,6 +294,22 @@ public class MainWindow extends javax.swing.JFrame {
         setVisible(false);
         dispose();
     }
+    
+    private void cmdApplyPreset() {
+        switch (presetComboBox.getSelectedIndex()) {
+            case 0 -> {
+                options.applyPreset(ConverterOptions.Preset.arduboy);
+            }
+            case 1 -> {
+                options.applyPreset(ConverterOptions.Preset.cosmono);
+            }
+            case 2 -> {
+                options.applyPreset(ConverterOptions.Preset.cos);
+            }
+        }
+        copyOptionsToUserInterface();
+        updatePreviewImage();
+    }
 
     /**
      * Opens a file chooser and loads the selected image file.
@@ -345,6 +363,10 @@ public class MainWindow extends javax.swing.JFrame {
         settingsScrollPane = new javax.swing.JScrollPane();
         settingsFramePanel = new javax.swing.JPanel();
         settingsHeadlineLabel = new javax.swing.JLabel();
+        presetLabel = new javax.swing.JLabel();
+        presetComboBox = new javax.swing.JComboBox<>();
+        applyPresetButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
         selectBackgroundColorLabel = new javax.swing.JLabel();
         invertColorsLabel = new javax.swing.JLabel();
         targetFormatLabel = new javax.swing.JLabel();
@@ -355,13 +377,15 @@ public class MainWindow extends javax.swing.JFrame {
         variableNameTextField = new javax.swing.JTextField();
         outputFilename = new javax.swing.JLabel();
         outputFilenameTextField = new javax.swing.JTextField();
-        saveButton = new javax.swing.JButton();
-        openImageButton = new javax.swing.JButton();
         includeDimensionsLabel = new javax.swing.JLabel();
         includeDimensionsCheckBox = new javax.swing.JCheckBox();
         backgroundColorPreviewPanel = new javax.swing.JPanel();
         variableTypeLabel = new javax.swing.JLabel();
         variableTypeTextField = new javax.swing.JTextField();
+        createAsciiArtLabel = new javax.swing.JLabel();
+        createAsciiArtCheckBox = new javax.swing.JCheckBox();
+        openImageButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
         updatePreviewButton = new javax.swing.JButton();
         statusBarPanel = new javax.swing.JPanel();
         statusBarLabel = new javax.swing.JLabel();
@@ -403,6 +427,18 @@ public class MainWindow extends javax.swing.JFrame {
         settingsHeadlineLabel.setFont(settingsHeadlineLabel.getFont().deriveFont(settingsHeadlineLabel.getFont().getStyle() | java.awt.Font.BOLD));
         settingsHeadlineLabel.setText("Settings");
 
+        presetLabel.setLabelFor(presetComboBox);
+        presetLabel.setText("Preset");
+
+        presetComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Arduboy", "Circuitmess Mono", "Circuitmess Color" }));
+
+        applyPresetButton.setText("Apply");
+        applyPresetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyPresetButtonActionPerformed(evt);
+            }
+        });
+
         selectBackgroundColorLabel.setLabelFor(selectBackgroundColorButton);
         selectBackgroundColorLabel.setText("Background color");
 
@@ -427,20 +463,6 @@ public class MainWindow extends javax.swing.JFrame {
         outputFilename.setLabelFor(outputFilenameTextField);
         outputFilename.setText("Output file");
 
-        saveButton.setText("Save");
-        saveButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                saveButtonActionPerformed(evt);
-            }
-        });
-
-        openImageButton.setText("Open Image");
-        openImageButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                openImageButtonActionPerformed(evt);
-            }
-        });
-
         includeDimensionsLabel.setLabelFor(invertColorsCheckBox);
         includeDimensionsLabel.setText("Include dimensions");
 
@@ -461,6 +483,23 @@ public class MainWindow extends javax.swing.JFrame {
         variableTypeLabel.setLabelFor(variableNameTextField);
         variableTypeLabel.setText("Variable type");
 
+        createAsciiArtLabel.setLabelFor(createAsciiArtCheckBox);
+        createAsciiArtLabel.setText("Create ASCII Art");
+
+        openImageButton.setText("Open Image");
+        openImageButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                openImageButtonActionPerformed(evt);
+            }
+        });
+
+        saveButton.setText("Save");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+
         updatePreviewButton.setText("Update Preview");
         updatePreviewButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -475,6 +514,14 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(settingsFramePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsFramePanelLayout.createSequentialGroup()
+                        .addGap(0, 28, Short.MAX_VALUE)
+                        .addComponent(updatePreviewButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(openImageButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(saveButton))
                     .addGroup(settingsFramePanelLayout.createSequentialGroup()
                         .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(selectBackgroundColorLabel)
@@ -484,29 +531,29 @@ public class MainWindow extends javax.swing.JFrame {
                             .addComponent(settingsHeadlineLabel)
                             .addComponent(outputFilename)
                             .addComponent(includeDimensionsLabel)
-                            .addComponent(variableTypeLabel))
+                            .addComponent(variableTypeLabel)
+                            .addComponent(presetLabel)
+                            .addComponent(createAsciiArtLabel))
                         .addGap(18, 18, 18)
                         .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(variableNameTextField)
                             .addComponent(targetFormatComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(outputFilenameTextField)
                             .addGroup(settingsFramePanelLayout.createSequentialGroup()
-                                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(invertColorsCheckBox)
-                                    .addComponent(includeDimensionsCheckBox))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(settingsFramePanelLayout.createSequentialGroup()
                                 .addComponent(backgroundColorPreviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(selectBackgroundColorButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(variableTypeTextField)))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, settingsFramePanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(updatePreviewButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(openImageButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(saveButton)))
+                            .addComponent(variableTypeTextField)
+                            .addGroup(settingsFramePanelLayout.createSequentialGroup()
+                                .addComponent(presetComboBox, 0, 1, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(applyPresetButton))
+                            .addGroup(settingsFramePanelLayout.createSequentialGroup()
+                                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(createAsciiArtCheckBox)
+                                    .addComponent(invertColorsCheckBox)
+                                    .addComponent(includeDimensionsCheckBox))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         settingsFramePanelLayout.setVerticalGroup(
@@ -516,35 +563,47 @@ public class MainWindow extends javax.swing.JFrame {
                 .addComponent(settingsHeadlineLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(selectBackgroundColorLabel)
-                        .addComponent(selectBackgroundColorButton))
-                    .addComponent(backgroundColorPreviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(targetFormatLabel)
-                    .addComponent(targetFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(variableNameLabel)
-                    .addComponent(variableNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(variableTypeLabel)
-                    .addComponent(variableTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(outputFilename)
-                    .addComponent(outputFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(invertColorsLabel)
-                    .addComponent(invertColorsCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(includeDimensionsLabel)
-                    .addComponent(includeDimensionsCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                    .addGroup(settingsFramePanelLayout.createSequentialGroup()
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(presetLabel)
+                            .addComponent(presetComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(applyPresetButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(selectBackgroundColorLabel)
+                                .addComponent(selectBackgroundColorButton))
+                            .addComponent(backgroundColorPreviewPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(targetFormatLabel)
+                            .addComponent(targetFormatComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(variableNameLabel)
+                            .addComponent(variableNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(variableTypeLabel)
+                            .addComponent(variableTypeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(outputFilename)
+                            .addComponent(outputFilenameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(invertColorsLabel)
+                            .addComponent(invertColorsCheckBox))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(includeDimensionsLabel)
+                            .addComponent(includeDimensionsCheckBox))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(createAsciiArtLabel))
+                    .addComponent(createAsciiArtCheckBox))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(settingsFramePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(saveButton)
                     .addComponent(openImageButton)
@@ -676,14 +735,22 @@ public class MainWindow extends javax.swing.JFrame {
         cmdOpenBackgroundColorChooser();
     }//GEN-LAST:event_selectBackgroundColorButtonActionPerformed
 
+    private void applyPresetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyPresetButtonActionPerformed
+        cmdApplyPreset();
+    }//GEN-LAST:event_applyPresetButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutMenuItem;
+    private javax.swing.JButton applyPresetButton;
     private javax.swing.JPanel backgroundColorPreviewPanel;
+    private javax.swing.JCheckBox createAsciiArtCheckBox;
+    private javax.swing.JLabel createAsciiArtLabel;
     private javax.swing.JSplitPane imageSplitPane;
     private javax.swing.JCheckBox includeDimensionsCheckBox;
     private javax.swing.JLabel includeDimensionsLabel;
     private javax.swing.JCheckBox invertColorsCheckBox;
     private javax.swing.JLabel invertColorsLabel;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JMenu mainMenu;
     private javax.swing.JMenuBar mainMenuBar;
     private javax.swing.JSplitPane mainSplitPane;
@@ -692,6 +759,8 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem openImageMenuItem;
     private javax.swing.JLabel outputFilename;
     private javax.swing.JTextField outputFilenameTextField;
+    private javax.swing.JComboBox<String> presetComboBox;
+    private javax.swing.JLabel presetLabel;
     private javax.swing.JScrollPane previewImageScrollPane;
     private javax.swing.JMenuItem quitMenuItem;
     private javax.swing.JButton saveButton;

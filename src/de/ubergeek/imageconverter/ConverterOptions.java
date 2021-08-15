@@ -80,7 +80,7 @@ public class ConverterOptions {
      * Indicates that an ascii representation should be generated.
      * -a / --ascii
      */
-    public boolean createAsciiArt = false;
+    public boolean createAsciiArt = true;
 
     // </editor-fold>
     
@@ -106,7 +106,7 @@ public class ConverterOptions {
             
             case cosmono -> {
                 backgroundColor = Color.BLACK;
-                mode = Mode.MONOV;
+                mode = Mode.MONOH;
                 variableType = "const byte PROGMEM";
                 includeDimensions = false;
             }
