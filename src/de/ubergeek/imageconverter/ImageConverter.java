@@ -161,7 +161,7 @@ public class ImageConverter {
                 }
             
             } catch (IllegalArgumentException ex) {
-                showHelp();
+                if (!helpShown) showHelp();
                 return;
             }
 
