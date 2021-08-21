@@ -23,6 +23,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -61,6 +62,14 @@ public class AboutDialog extends javax.swing.JDialog {
                 }
             }
         });
+        
+        try {
+            var properties = new Properties();
+            properties.load(this.getClass().getResourceAsStream("/version.properties"));
+            versionLabel.setText(properties.getProperty("Version.Number"));
+        } catch (IOException ex) {
+            Logger.getLogger(this.getClass().getName()).log(Level.WARNING, null, ex);
+        }
     }
 
     /**
@@ -93,7 +102,7 @@ public class AboutDialog extends javax.swing.JDialog {
         titleLabel.setText("ImageConverter");
 
         versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        versionLabel.setText("0.9");
+        versionLabel.setText("Version");
 
         infoLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         infoLabel.setText("<html><body><center>\nCreates C source files from images.<br>\n<br>\nCreated by André Gewert<br>\n<a href=\"mailto:agewert@ubergeek.de\">agewert@ubergeek.de</a><br>\n<a href=\"https://www.ubergeek.de\">www.ubergeek.de</a>\n</center></body></html>");

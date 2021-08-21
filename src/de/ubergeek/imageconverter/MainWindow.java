@@ -230,7 +230,7 @@ public class MainWindow extends javax.swing.JFrame {
             protected Void doInBackground() {
                 try {
                     converter.loadImage(filename);
-                    options.outputFilename = converter.getDefaultOutputFileName();
+                    options.outputFilename = converter.getDefaultOutputFileName(true);
                     options.variableName = converter.getDefaultVariableName();
                     success = true;
                 } catch (IOException ex) {

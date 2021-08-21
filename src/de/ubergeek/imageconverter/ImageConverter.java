@@ -19,6 +19,7 @@ package de.ubergeek.imageconverter;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,6 +61,7 @@ public class ImageConverter {
             String outfile = null;
             String outdir = null;
             ArrayList<String> filenames = new ArrayList<>();
+            boolean helpShown = false;
 
             try {
                 while (i < args.length) {
@@ -67,11 +69,13 @@ public class ImageConverter {
 
                     switch (arg) {
 
+                        // Specify the background color
                         case "-c", "--backgroundcolor" -> {
                             value = getArg(args, ++i);
                             if (value != null) options.backgroundColor = Color.decode(value);
                         }
 
+                        // Specify output format / conversion mode
                         case "-m", "--mode" -> {
                             value = getArg(args, ++i);
                             switch (value) {
@@ -90,14 +94,17 @@ public class ImageConverter {
                             }
                         }
 
+                        // Specify the variable name
                         case "-v", "--varname" -> {
                             options.variableName = getArg(args, ++i);
                         }
 
+                        // Specify the variable type
                         case "-t", "--vartype" -> {
                             options.variableType = getArg(args, ++i);
                         }
 
+                        // Specify output file name
                         case "-o", "--outputfile" -> {
                             if (outdir != null) {
                                 throw new IllegalArgumentException("Options --directory and --outputfile cannot be combined!");
@@ -105,23 +112,28 @@ public class ImageConverter {
                             outfile = getArg(args, ++i);
                         }
 
+                        // Specify if colors should be inverted
                         case "-i", "--invertcolors" -> {
                             options.invertColors = true;
                         }
 
+                        // Specify if image dimensions should be included in the array
                         case "-d", "--includedimensions" -> {
                             options.includeDimensions = true;
                         }
 
+                        // Specify if ascii representation should be created
                         case "-a", "--ascii" -> {
                             options.createAsciiArt = true;
                         }
 
+                        // Specify the preset of typical options that should be used
                         case "-p", "--preset" -> {
                             value = getArg(args, ++i);
                             options.applyPreset(ConverterOptions.Preset.valueOf(value));
                         }
-                        
+
+                        // Specify the output directory
                         case "-e", "--directory" -> {
                             if (outfile != null) {
                                 throw new IllegalArgumentException("Options --directory and --outputfile cannot be combined!");
@@ -129,10 +141,13 @@ public class ImageConverter {
                             outdir = getArg(args, ++i);
                         }
 
+                        // Output some help
                         case "-h", "--help" -> {
-                            // TODO show help text
+                            showHelp();
+                            helpShown = true;
                         }
 
+                        // Other arguments are interpreted as input file names
                         default -> {
                             filenames.add(arg);
                         }
@@ -140,6 +155,7 @@ public class ImageConverter {
                     i++;
                 }
 
+                // There should be some input files
                 if (filenames.isEmpty()) {
                     throw new IllegalArgumentException("No input files given!");
                 }
@@ -149,6 +165,8 @@ public class ImageConverter {
                 return;
             }
 
+            if (helpShown) return;
+            
             // Remove file before appending data to it
             if (outfile != null && Files.exists(Path.of(outfile))) {
                 Files.delete(Path.of(outfile));
@@ -158,8 +176,15 @@ public class ImageConverter {
             for (var filename : filenames) {
                 converter.loadImage(filename);
                 
-                // TODO use outdir if specified!
-                options.outputFilename = (outfile == null)? converter.getDefaultOutputFileName() : outfile;
+                // Create output file name
+                if (outfile != null) {
+                    options.outputFilename = outfile;
+                } else if (outdir != null) {
+                    options.outputFilename = outdir + File.separator + converter.getDefaultOutputFileName(false);
+                } else {
+                    options.outputFilename = converter.getDefaultOutputFileName(true);
+                }
+                                
                 if (options.variableName.isBlank()) {
                     options.variableName = converter.getDefaultVariableName();
                 }
@@ -174,7 +199,34 @@ public class ImageConverter {
     }
     
     private static void showHelp() {
-        // TODO implement
+        var nl = System.lineSeparator();
+        System.out.println(
+            "ImageConverter - creates C source files from images" + nl + nl +
+            "Usage:" + nl +
+            "-p, --preset <arduboy|cos|cosmono>" + nl +
+            "  Use an option preset for the given target." + nl + nl +
+            "-c, --backgroundcolor <color code>" + nl +
+            "  Sets the background color for the target image." + nl + nl +
+            "-m, --mode <mode>" + nl +
+            "  Specifies the output format: `rgb565` for 16bit color images or `monoh` or `monov` for monochrome images (horizontally or vertically grouped)." + nl + nl +
+            "-v, --varname <variable name>" + nl + 
+            "  Specifies the variable name that should be generated. Should not be used if multiple files should be converted in one program call. In this case the variable name will be derived from file name." + nl + nl +
+            "-t, --vartype <type>" + nl +
+            "  The c type expression that should be used in the generated source code." + nl + nl +
+            "-o, --outputfile <filename>" + nl +
+            "  Specifies the name of the output file that should be created." + nl + nl +
+            "-i, --invertcolors" + nl +
+            "  Set this option to invert the color reduced image." + nl + nl +
+            "-d, --includedimensions" + nl +
+            "  When this option is set, the generated array data will contain the image dimensions at the beginning." + nl + nl +
+            "-a, --ascii" + nl + 
+            "  Use this option when a ascii representation of the image should be included in the generated source code." + nl + nl +
+            "-e, --directory" + nl + 
+            "  Specify an output directory for generated files." + nl + nl +
+            "-h, --help" + nl + 
+            "  Show this help text." + nl + nl +
+            "Other argument will be interpreted as input file names. Don't give any arguments to start a graphical interface." + nl + nl
+        );
     }
 
 }

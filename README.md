@@ -13,10 +13,18 @@ If a Java runtime is installed, after unpacking the ZIP file, the file `ImageCon
 
 
 # Command line arguments
+- `-p`, `--preset` <arduboy|cos|cosmono>
+  Use an option preset for the given target:
+  - arduboy
+    Uncompressed, fast monochrome images for arduboy. Slow images (horizontally grouped) or RLE compressed images are not supported at the moment.
+  - cos
+    Color images (RGB565) for CircuitOS (Nibble, Ringo etc.)
+  - cosmono
+    Monochrome images for CircuitOS (Nibble, Ringo etc.)
 - `-c`, `--backgroundcolor` <color code>  
-Sets the background color for the target.
+Sets the background color for the target image.
 - `-m`, `--mode` <mode>  
-Specifies the output format: `rgb565` for 16bit color images or `mono` for monochrome images.
+Specifies the output format: `rgb565` for 16bit color images or `monoh` or `monov` for monochrome images (horizontally or vertically grouped).
 - `-v`, `--varname` <variable name>    
 Specifies the variable name that should be generated. Should not be used if multiple files should be converted in one program call. In this case the variable name will be derived from file name.
 - `-t`, `--vartype` <type>  
@@ -26,10 +34,16 @@ Specifies the name of the output file that should be created. If no output file 
 - `-i`, `--invertcolors`  
 Set this option to invert the color reduced image. Can be useful for some monochrome images.
 - `-d`, `--includedimensions`  
-When this option is set, the generated array data will contain the image dimensions at first. This format is required by some graphics libraries.
+When this option is set, the generated array data will contain the image dimensions at the beginning. This format is required by some graphics libraries.
+- `-a`, `--ascii`
+Use this option when a ascii representation of the image should be included in the generated source code.
+- `-e`, `--directory` <directory>
+Specify an output directory for generated files. This option cannot be combined with `--outputfile`.
+- `-h`, `--help`
+Outputs some help.
 
 Other arguments will be interpreted as file names for the input images.
-  
+
 # Third party components
 This software uses some icons from the [FatCow icon collection](https://www.fatcow.com/free-icons)
 and the Java Look and Feel [FlatLaf](https://www.formdev.com/flatlaf/).

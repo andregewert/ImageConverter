@@ -26,8 +26,18 @@ import java.awt.Color;
  */
 public class ConverterOptions {
     
+    /**
+     * Option presets for some typical targets.
+     */
     public enum Preset {
-        arduboy, cos, cosmono
+        /** Monochome images for Arduboy (uncompressed) */
+        arduboy,
+        
+        /** CircuitOS (Nibble, Ringo etc.) color images (RGB565) */
+        cos,
+        
+        /** CircuitOS (Nibble, Ringo etc.) monochrome images */
+        cosmono
     };
 
     // <editor-fold desc="Properties">

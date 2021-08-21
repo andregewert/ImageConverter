@@ -89,7 +89,7 @@
     <Component class="javax.swing.JLabel" name="versionLabel">
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="0.9"/>
+        <Property name="text" type="java.lang.String" value="Version"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="infoLabel">

@@ -109,8 +109,11 @@ public class Converter {
     /**
      * Creates a default file name for the source file to be created
      * @return Default file name for the source file
+     * @param includePath Indicates if the file path should be included
+     * (if input file name includes a path) or the file name itself should be
+     * returned
      */
-    public String getDefaultOutputFileName() {
+    public String getDefaultOutputFileName(boolean includePath) {
         var path = Path.of(getFilename());
         var dir = path.getParent();
         var fname = path.getFileName().toString();
@@ -175,7 +178,7 @@ public class Converter {
     public void saveOutputfile(ConverterOptions options, boolean append) throws IOException {
         var fname = options.outputFilename;
         if (fname == null || fname.isBlank()) {
-            fname = getDefaultOutputFileName();
+            fname = getDefaultOutputFileName(true);
         }
 
         var sb = new StringBuilder();
@@ -185,6 +188,8 @@ public class Converter {
             createAsciiArt(options, sb);
         }
 
+        sb.append("// Image size: ").append(calculateTargetWidth(options)).append(" x ").append(calculateTargetHeight(options)).append(System.lineSeparator());
+        
         // Variable declaration
         sb.append(options.variableType).append(" ").append(options.variableName).append("[] = {").append(System.lineSeparator());
         
@@ -311,7 +316,7 @@ public class Converter {
                 result = (array[2]) + (array[1] << 5) + (array[0] << 11);
                 
                 sb.append("0x").append(
-                    padLeft(Integer.toHexString(result), 4, '0')
+                    Integer.toHexString(result & 0xFFFF)
                 );
                 if (x != width -1 || y != height -1) {
                     sb.append(", ");
@@ -324,7 +329,7 @@ public class Converter {
     }
     
     /**
-     * Creates the source code for monochrome images (horizontally grouped).
+     * Creates the source code for monochrome images (horizontally grouped, big endian).
      * Bytes will be calculated horizontally; image width will be padded to a
      * multiple of 8.
      * @param options Converter options
@@ -352,6 +357,11 @@ public class Converter {
                 sb.append("B").append(
                     String.format("%8s", Integer.toBinaryString(resultByte & 0xFF)).replace(' ', '0')
                 );
+                
+                //sb.append("0x").append(
+                //    Integer.toHexString(resultByte & 0xFF)
+                //);
+                
                 if (x < width -8 || y < height -1) {
                     sb.append(", ");
                 }
@@ -372,7 +382,7 @@ public class Converter {
      */
     private int createMonoVSourceCode(ConverterOptions options, StringBuilder sb) {
         var img = (BufferedImage)createReducedImage(options);
-        byte resultByte;
+        int resultByte;
         int numberOfElements = 0;
         int width = img.getWidth();
         int height = img.getHeight();
@@ -387,10 +397,11 @@ public class Converter {
                         resultByte |= (array[0] << counter);
                     }
                 }
-                
+
                 sb.append("0x").append(
-                    padLeft(Integer.toHexString(resultByte), 2, '0')
+                    Integer.toHexString(resultByte & 0xFF)
                 );
+                
                 if (x < width -1 || y < height -8) {
                     sb.append(", ");
                 }
@@ -417,18 +428,7 @@ public class Converter {
             }
         }
     }
-    
-    /**
-     * Pads a string on the left side to the given length with a specific character.
-     * @param inputValue Input string
-     * @param length Target length
-     * @param fillChar Character for filling up the string
-     * @return The padded string
-     */
-    private static String padLeft(String inputValue, Integer length, char fillChar) {
-        return (inputValue + String.format("%" + length + "s", "").replace(" ", String.valueOf(fillChar))).substring(0, length);
-    }
-    
+
     // </editor-fold>
     
 }
